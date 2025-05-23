@@ -1,0 +1,42 @@
+/* src/components/DashboardCard.css */
+
+.dashboard-card {
+    background-color: #d0b133;
+    color: #1a1a1a;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease;
+    width: 450px;
+    height: 160px;
+}
+
+.dashboard-card:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.dashboard-card-icon {
+    width: 60px;
+    height: 60px;
+    color: #080808;
+}
+
+.dashboard-card-label {
+    margin-top: 40px;
+    margin-bottom: 5px;
+    font-size: 16px;
+    font-weight: 800;
+    color: #333;
+}
+
+.dashboard-card-value {
+    font-size: 28px;
+    font-weight: bold;
+}

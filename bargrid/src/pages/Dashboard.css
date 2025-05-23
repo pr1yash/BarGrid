@@ -1,0 +1,23 @@
+/* src/pages/Dashboard.css */
+
+.dashboard-page {
+    padding: 40px;
+    background-color: #f3f3f3;
+    min-height: 100vh;
+}
+
+.dashboard-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #1f1f1f;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 12px;
+    margin-bottom: 32px;
+}
+
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+}
