@@ -11,7 +11,7 @@ export default function Sidebar() {
     const initial = businessName.charAt(0).toUpperCase();
 
     const navItems = [
-        { name: 'Dashboard', path: '/', icon: '📊' },
+        { name: 'Dashboard', path: '/dashboard', icon: '📊' },
         { name: 'Team', path: '/team', icon: '👥' },
         { name: 'Schedule', path: '/schedule', icon: '🗓️' },
         { name: 'Settings', path: '/settings', icon: '⚙️' }
