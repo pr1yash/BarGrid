@@ -1,0 +1,71 @@
+/* === Container for whole page layout === */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* === Right side panel === */
+.login-right {
+  background-color: #D0B133;
+  width: 50vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* === Form styling === */
+.login-form {
+  background-color: #d1d5db; /* Tailwind gray-300 */
+  width: 35vw;
+  border-radius: 24px;       /* Tailwind rounded-3xl */
+  padding-top: 28px;         /* Tailwind py-7 */
+  padding-bottom: 28px;
+  padding-left: 40px;        /* Tailwind px-10 */
+  padding-right: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;                 /* Tailwind gap-4 */
+}
+
+/* === Headings === */
+.login-form h2 {
+  font-size: 1.5rem;         /* Tailwind text-2xl = 24px */
+  font-weight: 700;          /* Tailwind font-bold */
+}
+
+/* === Labels (no Tailwind in your code, so default stays) === */
+.login-form label {
+  font-size: 1rem;
+}
+
+/* === Inputs === */
+.login-form input {
+  background-color: white;
+  border-radius: 12px;       /* Tailwind rounded-xl */
+  padding: 12px;             /* Tailwind p-3 */
+  font-size: 1rem;
+}
+
+/* === Submit Button === */
+.login-form button {
+  background-color: #D0B133;
+  border-radius: 24px;       /* Tailwind rounded-3xl */
+  padding: 12px;             /* Tailwind p-3 */
+  font-size: 1.25rem;        /* Tailwind text-xl = 20px */
+  cursor: pointer;
+  font-weight: 700;          /* Tailwind font-bold */
+  border: none;
+}
+
+/* === Paragraph inside form === */
+.login-form p {
+  font-weight: 700;          /* Tailwind font-bold */
+}
+
+/* === Links inside paragraph === */
+.login-form a {
+  color: #1E40AF;            /* Tailwind text-blue-800 */
+  text-decoration: underline;
+}

@@ -1,0 +1,27 @@
+/* === AuthBrand.css === */
+
+.auth-brand {
+  background-color: #070101;
+  width: 60vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 120px; /* Tailwind gap-30 = 7.5rem = 120px */
+  align-items: center;
+  text-align: center;
+}
+
+/* Logo text */
+.auth-brand .logo {
+  margin-top: 10rem;       /* Tailwind mt-40 = 10rem = 160px */
+  font-size: 3rem;         /* Tailwind text-5xl = 3rem = 48px */
+  font-weight: bold;
+  color: #99916B;
+}
+
+/* Tagline text */
+.auth-brand .tagline {
+  font-size: 1.875rem;     /* Tailwind text-3xl = 1.875rem = 30px */
+  font-weight: bold;
+  color: #D0B133;
+}
