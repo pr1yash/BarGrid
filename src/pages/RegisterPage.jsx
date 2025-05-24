@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import AuthBrand from '../pages/AuthBrand';
-import '../components/RegisterPage.css';  // Import CSS file
+import AuthBrand from '../components/AuthBrand';
+import '../pages/RegisterPage.css';  // Import CSS file
 
 const RegisterPage = () => {
   const [businessName, setbusinessName] = useState('');

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import AuthBrand from '../pages/AuthBrand';
-import '../components/LoginPage.css';  // Import your CSS
+import AuthBrand from '../components/AuthBrand';
+import '../pages/LoginPage.css';  // Import your CSS
 
 const LoginPage = () => {
   // handles hooks for storing input values
