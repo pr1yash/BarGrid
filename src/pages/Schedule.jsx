@@ -10,6 +10,7 @@ const times = [
 
 const teamMembers = {
     Bartenders: ["Jason", "Abu", "Shirley", "Jones"],
+    Server: ["Shelly", "Durant", "Abigale"],
     Cook: ["Jason", "Abu"],
     Dishwasher: ["Shirley"],
 };
@@ -21,6 +22,10 @@ const initialSchedule = {
         { name: "Shirley", day: "Thursday", start: "1:00 PM", end: "5:00 PM", color: "#BA68C8" },
         { name: "Jones", day: "Friday", start: "6:00 PM", end: "12:00 AM", color: "#4FC3F7" },
     ],
+    Server: [
+        { name: "Shelly", day: "Friday", start: "11:00 AM", end: "3:00 PM", color: "#AED581" },
+        { name: "Abigale", day: "Saturday", start: "2:00 PM", end: "8:00 PM", color: "#FF8A65" },
+    ],
     Cook: [
         { name: "Jason", day: "Friday", start: "11:00 AM", end: "3:00 PM", color: "#AED581" },
         { name: "Abu", day: "Saturday", start: "2:00 PM", end: "8:00 PM", color: "#FF8A65" },
@@ -30,7 +35,7 @@ const initialSchedule = {
     ],
 };
 
-const roles = ["Bartenders", "Cook", "Dishwasher"];
+const roles = ["Bartenders", "Server", "Cook", "Dishwasher"];
 
 const Schedule = () => {
     const [scheduleData, setScheduleData] = useState(initialSchedule);
