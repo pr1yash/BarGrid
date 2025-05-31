@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int          @id @default(autoincrement())
+  name        String
+  email       String       @unique
+  role        String
+  teamMembers TeamMember[]
+}
+
+model TeamMember {
+  id          Int          @id @default(autoincrement())
+  name        String
+  role        String
+  shifts      Shift[]
+  userId      Int
+  user        User         @relation(fields: [userId], references: [id])
+}
+
+model Shift {
+  id          Int          @id @default(autoincrement())
+  day         String
+  startTime   String
+  endTime     String
+  teamMember  TeamMember   @relation(fields: [teamMemberId], references: [id])
+  teamMemberId Int
+}
