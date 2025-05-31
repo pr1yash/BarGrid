@@ -3,6 +3,7 @@ import "./Team.css";
 
 const initialTeamData = {
     Bartender: ["Jason", "Abu", "Shirley", "Jones"],
+    Server: ["Shelly", "Durant", "Abigale"],
     Cook: ["Jason", "Abu"],
     Dishwasher: ["Jason"],
 };
