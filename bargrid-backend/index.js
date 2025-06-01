@@ -1,8 +1,6 @@
-// index.js
-
 import express from 'express';
 import cors from 'cors';
-import bodyParser from 'body-parser'; // Add this
+import bodyParser from 'body-parser';
 import { PrismaClient } from '@prisma/client';
 
 const app = express();
@@ -10,12 +8,14 @@ const prisma = new PrismaClient();
 
 // Middleware
 app.use(cors());
-app.use(bodyParser.json()); // Explicit JSON parser for ESM setup
+app.use(bodyParser.json());
 
 // Test Route
 app.get('/', (req, res) => {
     res.send('BarGrid API is up and running!');
 });
+
+// TEAM ROUTES
 
 // Get all team members
 app.get('/team', async (req, res) => {
@@ -30,8 +30,6 @@ app.get('/team', async (req, res) => {
 // Add a team member
 app.post('/team', async (req, res) => {
     const { name, role, userId } = req.body;
-    console.log('Received /team POST:', req.body); // Debug log
-
     try {
         const newMember = await prisma.teamMember.create({
             data: { name, role, userId },
@@ -42,11 +40,43 @@ app.post('/team', async (req, res) => {
     }
 });
 
+// Update a team member
+app.patch('/team/:id', async (req, res) => {
+    const { id } = req.params;
+    const { name, role, userId } = req.body;
+
+    try {
+        const updatedMember = await prisma.teamMember.update({
+            where: { id: Number(id) },
+            data: { name, role, userId },
+        });
+        res.json(updatedMember);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Delete a team member
+app.delete('/team/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        await prisma.teamMember.delete({
+            where: { id: Number(id) },
+        });
+        res.json({ message: `Team member ${id} deleted successfully` });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// SHIFTS ROUTES
+
 // Get all shifts
 app.get('/shifts', async (req, res) => {
     try {
         const shifts = await prisma.shift.findMany({
-            include: { teamMember: true }, // Optional: include related team member info
+            include: { teamMembers: true },
         });
         res.json(shifts);
     } catch (error) {
@@ -56,14 +86,41 @@ app.get('/shifts', async (req, res) => {
 
 // Add a shift
 app.post('/shifts', async (req, res) => {
-    console.log('Received /shifts POST:', req.body); // Debug log
-
-    const { teamMemberId, day, startTime, endTime } = req.body;
+    const { day, startTime, endTime, teamMemberIds } = req.body;
     try {
         const newShift = await prisma.shift.create({
-            data: { teamMemberId, day, startTime, endTime },
+            data: {
+                day,
+                startTime,
+                endTime,
+                teamMembers: {
+                    connect: teamMemberIds.map(id => ({ id })),
+                },
+            },
         });
         res.json(newShift);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Update a shift
+app.patch('/shifts/:id', async (req, res) => {
+    const { id } = req.params;
+    const { day, startTime, endTime, teamMemberIds } = req.body;
+    try {
+        const updatedShift = await prisma.shift.update({
+            where: { id: Number(id) },
+            data: {
+                day,
+                startTime,
+                endTime,
+                teamMembers: {
+                    set: teamMemberIds.map(id => ({ id })),
+                },
+            },
+        });
+        res.json(updatedShift);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -82,26 +139,13 @@ app.delete('/shifts/:id', async (req, res) => {
     }
 });
 
-// Update a shift (Optional)
-app.patch('/shifts/:id', async (req, res) => {
-    const { id } = req.params;
-    const { day, startTime, endTime, teamMemberId } = req.body;
-    try {
-        const updatedShift = await prisma.shift.update({
-            where: { id: Number(id) },
-            data: { day, startTime, endTime, teamMemberId },
-        });
-        res.json(updatedShift);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+// USERS ROUTES
 
 // Get all users
 app.get('/users', async (req, res) => {
     try {
         const users = await prisma.user.findMany({
-            include: { teamMembers: true }, // Optional
+            include: { teamMembers: true },
         });
         res.json(users);
     } catch (error) {
@@ -122,8 +166,7 @@ app.post('/users', async (req, res) => {
     }
 });
 
-
-// Server start
+// Start server
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
     console.log(`BarGrid API listening on http://localhost:${PORT}`);

@@ -19,9 +19,9 @@ model TeamMember {
   id          Int          @id @default(autoincrement())
   name        String
   role        String
-  shifts      Shift[]
   userId      Int
   user        User         @relation(fields: [userId], references: [id])
+  shifts      Shift[]      @relation("ShiftAssignments")
 }
 
 model Shift {
@@ -29,6 +29,5 @@ model Shift {
   day         String
   startTime   String
   endTime     String
-  teamMember  TeamMember   @relation(fields: [teamMemberId], references: [id])
-  teamMemberId Int
+  teamMembers TeamMember[] @relation("ShiftAssignments")
 }
