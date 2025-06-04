@@ -16,13 +16,18 @@ model User {
 }
 
 model TeamMember {
-  id          Int          @id @default(autoincrement())
-  name        String
-  role        String
-  userId      Int
-  user        User         @relation(fields: [userId], references: [id])
-  shifts      Shift[]      @relation("ShiftAssignments")
+  id              Int          @id @default(autoincrement())
+  name            String
+  role            String
+  shiftPreference String       @default("Mix")   // Morning, Evening, Mix
+  mustHaveDays    String[]                       // e.g., ["Monday", "Wednesday"]
+  numberOfDays    Int?                           // Max shifts per week
+  userId          Int
+  user            User         @relation(fields: [userId], references: [id])
+  shifts          Shift[]      @relation("ShiftAssignments")
 }
+
+
 
 model Shift {
   id          Int          @id @default(autoincrement())

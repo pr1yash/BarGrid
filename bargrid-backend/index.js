@@ -43,18 +43,33 @@ app.post('/team', async (req, res) => {
 // Update a team member
 app.patch('/team/:id', async (req, res) => {
     const { id } = req.params;
-    const { name, role, userId } = req.body;
+    const {
+        name,
+        role,
+        userId,
+        shiftPreference,
+        mustHaveDays,
+        numberOfDays
+    } = req.body;
 
     try {
         const updatedMember = await prisma.teamMember.update({
             where: { id: Number(id) },
-            data: { name, role, userId },
+            data: {
+                ...(name && { name }),
+                ...(role && { role }),
+                ...(userId && { userId }),
+                ...(shiftPreference && { shiftPreference }),
+                ...(mustHaveDays && { mustHaveDays }),
+                ...(numberOfDays !== undefined && { numberOfDays }),
+            },
         });
         res.json(updatedMember);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
+
 
 // Delete a team member
 app.delete('/team/:id', async (req, res) => {

@@ -2,14 +2,15 @@ import React, { useState, useEffect } from "react";
 import "./Team.css";
 import { API_URL } from "../config";
 
-const ROLES = ["Bartender", "Server", "Cook", "Dishwasher"]; // Ensure consistency
+const ROLES = ["Bartender", "Server", "Cook", "Dishwasher"];
+const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+const SHIFT_OPTIONS = ["Morning", "Evening", "Mix"];
 
 const Team = () => {
     const [teamData, setTeamData] = useState({});
     const [editing, setEditing] = useState({});
     const [deleteConfirm, setDeleteConfirm] = useState(null);
 
-    // Fetch team data from API
     useEffect(() => {
         const fetchTeam = async () => {
             try {
@@ -32,7 +33,6 @@ const Team = () => {
         fetchTeam();
     }, []);
 
-    // Add new team member
     const handleAddRow = async (role) => {
         try {
             const response = await fetch(`${API_URL}/team`, {
@@ -41,7 +41,7 @@ const Team = () => {
                 body: JSON.stringify({
                     name: "",
                     role,
-                    userId: 1, // Hardcoded userId for now
+                    userId: 1,
                 }),
             });
 
@@ -58,21 +58,22 @@ const Team = () => {
         }
     };
 
-    // Edit team member name
-    const handleNameChange = async (role, index, newName) => {
-        const member = teamData[role][index];
-
-        if (member.id) {
-            try {
-                await fetch(`${API_URL}/team/${member.id}`, {
-                    method: "PATCH",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ name: newName }),
-                });
-            } catch (error) {
-                console.error("Error updating team member:", error);
-            }
+    const updateMember = async (memberId, updates) => {
+        try {
+            await fetch(`${API_URL}/team/${memberId}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updates),
+            });
+        } catch (error) {
+            console.error("Error updating team member:", error);
         }
+    };
+
+    const handleNameChange = (role, index, newName) => {
+        const member = teamData[role][index];
+        if (!member) return;
+        updateMember(member.id, { name: newName });
 
         setTeamData((prev) => ({
             ...prev,
@@ -82,19 +83,59 @@ const Team = () => {
         }));
     };
 
-    // Delete team member
+    const handleShiftPreferenceChange = (role, index, newPref) => {
+        const member = teamData[role][index];
+        updateMember(member.id, { shiftPreference: newPref });
+
+        setTeamData((prev) => ({
+            ...prev,
+            [role]: prev[role].map((m, i) =>
+                i === index ? { ...m, shiftPreference: newPref } : m
+            ),
+        }));
+    };
+
+    const handleMustHaveDaysChange = (role, index, day) => {
+        const member = teamData[role][index];
+        const currentDays = member.mustHaveDays || [];
+
+        const updatedDays = currentDays.includes(day)
+            ? currentDays.filter(d => d !== day)
+            : [...currentDays, day];
+
+        updateMember(member.id, { mustHaveDays: updatedDays });
+
+        setTeamData((prev) => ({
+            ...prev,
+            [role]: prev[role].map((m, i) =>
+                i === index ? { ...m, mustHaveDays: updatedDays } : m
+            ),
+        }));
+    };
+
+    const handleNumberOfDaysChange = (role, index, value) => {
+        const member = teamData[role][index];
+        const num = parseInt(value);
+        updateMember(member.id, { numberOfDays: num });
+
+        setTeamData((prev) => ({
+            ...prev,
+            [role]: prev[role].map((m, i) =>
+                i === index ? { ...m, numberOfDays: num } : m
+            ),
+        }));
+    };
+
     const handleDeleteRow = async () => {
         const { role, index } = deleteConfirm;
         const member = teamData[role][index];
 
-        if (member.id) {
-            try {
-                await fetch(`${API_URL}/team/${member.id}`, {
-                    method: "DELETE",
-                });
-            } catch (error) {
-                console.error("Error deleting team member:", error);
-            }
+        try {
+            await fetch(`${API_URL}/team/${member.id}`, {
+                method: "DELETE",
+            });
+        } catch (error) {
+            console.error("Error deleting team member:", error);
         }
 
         setTeamData((prev) => ({
@@ -154,27 +195,43 @@ const Team = () => {
                                         )}
                                     </td>
                                     <td>
-                                        <select>
-                                            <option>---Select---</option>
-                                            <option>Morning</option>
-                                            <option>Evening</option>
-                                            <option>Mixed</option>
+                                        <select
+                                            value={member.shiftPreference || "Mix"}
+                                            onChange={(e) =>
+                                                handleShiftPreferenceChange(role, index, e.target.value)
+                                            }
+                                        >
+                                            <option value="">-- Select --</option>
+                                            {SHIFT_OPTIONS.map(opt => (
+                                                <option key={opt} value={opt}>{opt}</option>
+                                            ))}
                                         </select>
                                     </td>
                                     <td>
-                                        <select>
-                                            <option>---Select---</option>
-                                            <option>Monday</option>
-                                            <option>Tuesday</option>
-                                            <option>Wednesday</option>
-                                            <option>Thursday</option>
-                                            <option>Friday</option>
-                                            <option>Saturday</option>
-                                            <option>Sunday</option>
-                                        </select>
+                                        <div className="day-checkboxes">
+                                            {DAYS.map((day) => (
+                                                <label key={day}>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={member.mustHaveDays?.includes(day) || false}
+                                                        onChange={() =>
+                                                            handleMustHaveDaysChange(role, index, day)
+                                                        }
+                                                    />
+                                                    {day.slice(0, 3)}
+                                                </label>
+                                            ))}
+                                        </div>
                                     </td>
                                     <td>
-                                        <input type="number" min="0" />
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            value={member.numberOfDays || ""}
+                                            onChange={(e) =>
+                                                handleNumberOfDaysChange(role, index, e.target.value)
+                                            }
+                                        />
                                     </td>
                                 </tr>
                             ))}
